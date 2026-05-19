@@ -76,6 +76,56 @@
             margin-top: 10px;
         }
 
+        /* التنسيقات المضافة للأزرار الجديدة تحت العنوان */
+        .header-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .support-btn {
+            background-color: var(--nuclear-yellow);
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px var(--shadow);
+            transition: 0.3s;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .support-btn:hover {
+            transform: scale(1.05);
+            background-color: #e1b10c;
+        }
+
+        .telegram-btn {
+            background-color: #0088cc;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px var(--shadow);
+            transition: 0.3s;
+        }
+        .telegram-btn:hover {
+            transform: scale(1.05);
+            background-color: #0077b3;
+        }
+
+        .ad-timer-status {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-top: 8px;
+            font-weight: bold;
+            min-height: 20px;
+        }
+
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -149,7 +199,7 @@
         /* تنسيق زر النماذج الاسترشادية داخل كارت العربي */
         .models-btn {
             display: inline-block;
-            margin-top: 15px;
+            margin-top: 10px;
             padding: 8px 15px;
             background-color: var(--accent);
             color: white;
@@ -160,6 +210,7 @@
             transition: 0.3s;
             position: relative;
             z-index: 10; /* لضمان قابليته للنقر فوق الكارد */
+            width: 85%;
         }
         .models-btn:hover {
             background-color: #e04400;
@@ -194,14 +245,26 @@
     <header>
         <h1>⚡ القنابل النووية 💣</h1>
         <span class="sub-title">للثانوية العامة</span>
+        
+        <!-- الأزرار الصغيرة المضافة أسفل العنوان الرئيسي مباشرة -->
+        <div class="header-buttons">
+            <a href="#" class="support-btn" onclick="watchMandatoryAd(event)">⚠️ ادعمنا بمشاهدة اعلان</a>
+            <a href="https://t.me/Apps4Users" target="_blank" class="telegram-btn" onclick="playTelegramVoice(event)">📢 قناة التليجرام</a>
+        </div>
+        <div id="adTimerStatus" class="ad-timer-status"></div>
     </header>
 
     <div class="grid-container">
-        <!-- كارد اللغة العربية مضاف إليه زر النماذج الاسترشادية -->
+        <!-- كارد اللغة العربية مضاف إليه الأزرار والروابط الجديدة ونظام الاستبدال الإعلاني -->
         <div class="bomb-card arabic" onclick="fetchData('arabic', 'https://raw.githubusercontent.com/username/repo/main/arabic.json')">
             <i>📖</i>
             <h2>قنابل العربية</h2>
-            <a href="https://sanwia3ama-revisions-exams.github.io/arabic2026/" target="_blank" class="models-btn" onclick="event.stopPropagation();">اسئلة و اجابة النماذج الاسترشادية</a>
+            
+            <!-- زر مراجعة النحو شامل فوق النماذج الاسترشادية -->
+            <a href="#" class="models-btn" style="background-color: #2ecc71;" onclick="handleArabicFeature('grammar', 'https://sanwia3ama-revisions-exams.github.io/-2026/', event)">مراجعة النحو شامل</a>
+            
+            <!-- زر النماذج الاسترشادية -->
+            <a href="#" class="models-btn" onclick="handleArabicFeature('models', 'https://sanwia3ama-revisions-exams.github.io/arabic2026/', event)">اسئلة و اجابة النماذج الاسترشادية</a>
         </div>
         
         <div class="bomb-card physics" onclick="fetchData('physics', 'https://raw.githubusercontent.com/username/repo/main/physics.json')">
@@ -277,6 +340,12 @@
     </div>
 
     <script>
+        // متغيرات التحكم بنظام الإعلانات والأقفال
+        let isFeaturesUnlocked = false;
+        let adCountdownInterval = null;
+        let lastOpenedFeature = null; // لتتبع التناوب بين النحو والنماذج الاسترشادية
+        const adUrl = "https://linkjust.com/Braile26";
+
         function toggleTheme() {
             const body = document.body;
             const btn = document.querySelector('.theme-switch');
@@ -291,24 +360,109 @@
             }
         }
 
+        // دالة تشغيل الرسالة الصوتية الخارجية قبل الانتقال للتليجرام لضمان عدم الحظر
+        function playTelegramVoice(event) {
+            event.stopPropagation();
+            const msg = new SpeechSynthesisUtterance();
+            msg.text = "انضم لقناة التليجرام لأن سيتم تحميل تعليم اللغة الصينية والألمانية في إجازة الثانوية العامة، فيشرفنا انضمامك أولاً.";
+            msg.lang = 'ar-SA';
+            window.speechSynthesis.speak(msg);
+        }
+
+        // دالة تشغيل الإعلان الإجباري لتفعيل التطبيق كامل من أيقونة ادعمنا
+        function watchMandatoryAd(event) {
+            event.preventDefault();
+            if (isFeaturesUnlocked) {
+                alert("المميزات مفتوحة بالفعل لديك الآن! مشاهدة ممتعة.");
+                return;
+            }
+
+            // تحديد مدة عشوائية تتراوح بين 35 إلى 60 ثانية في كل مرة للمستخدم
+            const randomDuration = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
+            let currentTimer = randomDuration;
+
+            window.open(adUrl, '_blank');
+            
+            const timerDisplay = document.getElementById('adTimerStatus');
+            timerDisplay.innerText = `جاري التحقق من دعمك.. يرجى الانتظار: ${currentTimer} ثانية`;
+
+            if (adCountdownInterval) clearInterval(adCountdownInterval);
+
+            adCountdownInterval = setInterval(() => {
+                currentTimer--;
+                if (currentTimer > 0) {
+                    timerDisplay.innerText = `جاري التحقق من دعمك.. يرجى الانتظار: ${currentTimer} ثانية`;
+                } else {
+                    clearInterval(adCountdownInterval);
+                    isFeaturesUnlocked = true;
+                    timerDisplay.innerText = "✨ تم فتح كافة المميزات بنجاح! شكراً لدعمك.";
+                    alert("شكراً لك! تم فك قفل المميزات كاملة داخل التطبيق بنجاح.");
+                }
+            }, 1000);
+        }
+
+        // دالة معالجة كارت العربي بالتناوب والتحقق من بقاء المشاهدة والإعلان للهروب
+        function handleArabicFeature(type, originalUrl, event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // إذا كان الطالب قد فك القفل مسبقاً عبر أيقونة ادعمنا
+            if (isFeaturesUnlocked) {
+                window.open(originalUrl, '_blank');
+                return;
+            }
+
+            // نظام الاستبدال والتناوب
+            if (lastOpenedFeature === null || lastOpenedFeature === type) {
+                // تفعيل وضع الإعلان بسبب الاستبدال أو المحاولة الأولى للهروب
+                lastOpenedFeature = type === 'grammar' ? 'models' : 'grammar';
+                
+                const randomDuration = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
+                let currentTimer = randomDuration;
+                
+                window.open(adUrl, '_blank');
+                alert("مشاهدة الإعلان هي داعم لنا لكي نستمر وسيتم فتح الميزة تلقائياً بعد انتهاء المدة المحددة.");
+
+                const timerDisplay = document.getElementById('adTimerStatus');
+                if (adCountdownInterval) clearInterval(adCountdownInterval);
+
+                adCountdownInterval = setInterval(() => {
+                    currentTimer--;
+                    if (currentTimer > 0) {
+                        timerDisplay.innerText = `يجب إكمال الإعلان لفتح المحتوى: ${currentTimer} ثانية`;
+                    } else {
+                        clearInterval(adCountdownInterval);
+                        isFeaturesUnlocked = true;
+                        timerDisplay.innerText = "✨ تم فك القفل بنجاح.";
+                        window.open(originalUrl, '_blank');
+                    }
+                }, 1000);
+            } else {
+                // إذا شاهده بالتناوب الصحيح أو انتهى العداد يفتح مباشرة
+                window.open(originalUrl, '_blank');
+                lastOpenedFeature = type; // التبديل للمرة القادمة
+            }
+        }
+
         // دالة جلب البيانات من JSON عبر GitHub
         async function fetchData(subjectName, url) {
             console.log("جاري الاتصال بقاعدة بيانات: " + subjectName);
             
+            // حماية الميزات: إذا لم يتم فك القفل يطلب منه إكمال الإعلان أولاً
+            if (!isFeaturesUnlocked) {
+                alert("مشاهدة الإعلان هي داعم لنا لكي نستمر. من فضلك اضغط على أيقونة 'ادعمنا بمشاهدة اعلان' أعلى الصفحة لفتح كافة قنابل المواد!");
+                return;
+            }
+            
             try {
-                // هنا يتم جلب ملف الـ JSON
-                // ملحوظة: يجب استخدام رابط الـ Raw من GitHub ليعمل الكود
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('فشل في جلب البيانات');
                 
                 const data = await response.json();
-                
-                // هنا تضعي منطق عرض السؤال والجواب (مثلاً في Modal أو صفحة جديدة)
                 alert("تم بنجاح جلب " + data.questions.length + " سؤال في مادة " + subjectName);
                 console.log(data);
                 
             } catch (error) {
-                // تم إخفاء رسالة التنبيه (Alert) عند حدوث خطأ أو عند استخدام روابط تجريبية وطباعتها في الـ Console فقط
                 console.warn("جاري ربط ملف الـ JSON لمادة " + subjectName + ".. تأكد من وضع رابط الـ Raw الصحيح من GitHub.");
             }
         }
