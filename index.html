@@ -119,15 +119,6 @@
             background-color: #0077b3;
         }
 
-        .ad-timer-status {
-            font-size: 0.9rem;
-            color: var(--accent);
-            margin-top: 10px;
-            font-weight: bold;
-            min-height: 22px;
-            text-align: center;
-        }
-
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -253,7 +244,6 @@
             <a href="#" class="ad-support-btn" onclick="runGlobalAdSystem(event)">⚠️ ادعمنا بمشاهدة اعلان</a>
             <a href="https://t.me/Apps4Users" target="_blank" class="tg-custom-btn" onclick="executeTelegramVoice(event)">📢 قناة التليجرام</a>
         </div>
-        <div id="adTimerZone" class="ad-timer-status"></div>
     </header>
 
     <div class="grid-container">
@@ -345,8 +335,20 @@
         // المتغيرات التشغيلية للمنظومة الذكية
         let globalFeaturesUnlocked = false;
         let countdownTimerReference = null;
-        let lastInteractedTab = null; // يضمن التناوب والاستبدال الإعلاني بين النحو والنماذج الاسترشادية
+        let isFirstUsage = true; // تتبع أول استخدام للتطبيق لمنح الضغطة المجانية الأولى
+        let adWatchingInProgress = false; // يمنع تخطي الإعلان قبل انتهاء المدة
         const officialAdLink = "https://linkjust.com/Braile26";
+
+        // تشغيل النطق الصوتي التلقائي فور فتح التطبيق مباشرة
+        window.addEventListener('DOMContentLoaded', () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const welcomePrompt = new SpeechSynthesisUtterance();
+                welcomePrompt.text = "يشرفني انضمامك بقناة التليجرام فسيتم تحميل شرح تعلم اللغة الالمانية و الصينية في اجازة الصيف إن شاء الله";
+                welcomePrompt.lang = 'ar-SA';
+                window.speechSynthesis.speak(welcomePrompt);
+            }
+        });
 
         function toggleTheme() {
             const body = document.body;
@@ -362,11 +364,11 @@
             }
         }
 
-        // دالة تشغيل النطق الصوتي الفوري والتوجيه الخارجي الآمن لمنع حظر التطبيق لقناة التليجرام
+        // دالة تشغيل النطق الصوتي الفوري والتوجيه الخارجي الآمن لقناة التليجرام
         function executeTelegramVoice(event) {
             event.stopPropagation();
             if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // تصفية أي نطق صوتي معلق ومستمر
+                window.speechSynthesis.cancel(); 
                 const vocalPrompt = new SpeechSynthesisUtterance();
                 vocalPrompt.text = "انضم لقناة التليجرام لأن سيتم تحميل تعليم اللغة الصينية والألمانية في إجازة الثانوية العامة فيشرفنا انضمامك أولاً.";
                 vocalPrompt.lang = 'ar-SA';
@@ -374,7 +376,7 @@
             }
         }
 
-        // دالة تفعيل الإعلان الإجباري والعداد العشوائي عبر أيقونة "ادعمنا بمشاهدة اعلان" لفك القفل بالكامل
+        // دالة تفعيل الإعلان الإجباري والعداد العشوائي عند الضغط على زر "ادعمنا بمشاهدة اعلان"
         function runGlobalAdSystem(event) {
             event.preventDefault();
             if (globalFeaturesUnlocked) {
@@ -382,70 +384,70 @@
                 return;
             }
 
-            // احتساب مدة عشوائية تتنوع وتختلف لكل مستخدم في كل مرة من 35 إلى 60 ثانية
+            adWatchingInProgress = true;
+            // احتساب مدة عشوائية تتغير في كل مرة من 35 إلى 60 ثانية
             const randomizedTime = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
             let counterTime = randomizedTime;
 
             window.open(officialAdLink, '_blank');
-            
-            const timerBox = document.getElementById('adTimerZone');
-            timerBox.innerText = `جاري التحقق من دعمك للإعلان.. يرجى الانتظار: ${counterTime} ثانية`;
+            alert("يرجى الانتظار وموجب مشاهدة الإعلان المفتوح بالكامل لتفعيل كافة ميزات التطبيق.");
 
             if (countdownTimerReference) clearInterval(countdownTimerReference);
 
             countdownTimerReference = setInterval(() => {
                 counterTime--;
-                if (counterTime > 0) {
-                    timerBox.innerText = `جاري التحقق من دعمك للإعلان.. يرجى الانتظار: ${counterTime} ثانية`;
-                } else {
+                if (counterTime <= 0) {
                     clearInterval(countdownTimerReference);
                     globalFeaturesUnlocked = true;
-                    timerBox.innerText = "✨ تم فك قفل كافة روابط ومميزات التطبيق بنجاح!";
+                    adWatchingInProgress = false;
                     alert("شكراً لك! تم فك قفل جميع المميزات وقنابل المواد بنجاح.");
                 }
             }, 1000);
         }
 
-        // دالة معالجة روابط كارت العربي بالتناوب والتحقق من عدم هروب الطالب أو تخطي الإعلان
+        // دالة معالجة روابط كارت العربي بالتناوب والتحقق الشامل من وقت الإعلان
         function processArabicRedirect(currentTab, targetContentUrl, event) {
             event.preventDefault();
             event.stopPropagation();
 
-            // إذا قام الطالب بمشاهدة الإعلان الرئيسي مسبقاً وفك القفل الشامل
+            // 1. إذا كانت هذه هي أول مرة يضغط فيها المستخدم على النحو أو النماذج (تفتح مباشرة بدون إعلان)
+            if (isFirstUsage) {
+                isFirstUsage = false; // استهلاك المرة الأولى المجانية
+                window.open(targetContentUrl, '_blank');
+                return;
+            }
+
+            // 2. إذا تم فك القفل الشامل مسبقاً عن طريق إكمال الإعلان بالكامل
             if (globalFeaturesUnlocked) {
                 window.open(targetContentUrl, '_blank');
                 return;
             }
 
-            // تطبيق قاعدة الاستبدال والتناوب الإعلاني الصارم بين الخصائص الداخلية
-            if (lastInteractedTab === null || lastInteractedTab === currentTab) {
-                lastInteractedTab = currentTab === 'grammar' ? 'models' : 'grammar';
-                
-                const randomizedTime = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
-                let counterTime = randomizedTime;
-                
-                window.open(officialAdLink, '_blank');
-                alert("مشاهدة الاعلان هي داعم لنا لكي نستمر. سيتم فتح الميزة لك بعد انتهاء المدة المتنوعة تلقائياً!");
-
-                const timerBox = document.getElementById('adTimerZone');
-                if (countdownTimerReference) clearInterval(countdownTimerReference);
-
-                countdownTimerReference = setInterval(() => {
-                    counterTime--;
-                    if (counterTime > 0) {
-                        timerBox.innerText = `يجب إكمال وقت الإعلان لفتح الرابط: ${counterTime} ثانية`;
-                    } else {
-                        clearInterval(countdownTimerReference);
-                        globalFeaturesUnlocked = true;
-                        timerBox.innerText = "✨ تم فك القفل.";
-                        window.open(targetContentUrl, '_blank');
-                    }
-                }, 1000);
-            } else {
-                // الفتح المباشر في حال التناوب الصحيح
-                window.open(targetContentUrl, '_blank');
-                lastInteractedTab = currentTab;
+            // 3. إذا كان هناك إعلان جاري تشغيله حالياً ولم تنتهِ مدته (نظام حماية القفل التلقائي)
+            if (adWatchingInProgress) {
+                alert("اضغطت لمشاهدة الاعلان لانه دعم لنا حتي تفتح الميزات");
+                return;
             }
+
+            // 4. تفعيل الإعلان الإجباري بالتبادل للمرات التالية بمدد عشوائية متغيرة من 35 إلى 60 ثانية
+            adWatchingInProgress = true;
+            const randomizedTime = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
+            let counterTime = randomizedTime;
+            
+            window.open(officialAdLink, '_blank');
+            alert("مشاهدة الاعلان هي داعم لنا لكي نستمر. اضغطت لمشاهدة الاعلان لانه دعم لنا حتي تفتح الميزات تلقائياً بعد انتهاء المدة!");
+
+            if (countdownTimerReference) clearInterval(countdownTimerReference);
+
+            countdownTimerReference = setInterval(() => {
+                counterTime--;
+                if (counterTime <= 0) {
+                    clearInterval(countdownTimerReference);
+                    globalFeaturesUnlocked = true;
+                    adWatchingInProgress = false;
+                    window.open(targetContentUrl, '_blank');
+                }
+            }, 1000);
         }
 
         // دالة جلب البيانات من JSON عبر GitHub مع نظام الحماية الصارم
