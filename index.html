@@ -31,10 +31,42 @@
             color: var(--text);
             margin: 0;
             transition: all 0.4s ease;
+            min-height: 100vh;
+        }
+
+        /* حاوية التصميم الرئيسية على شكل حرف H */
+        .h-layout-container {
+            display: grid;
+            grid-template-columns: 200px 1fr 200px; /* الجوانب للاعلانات والوسط للتطبيق */
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* تنسيق أعمدة الإعلانات الجانبية */
+        .sidebar-ad-zone {
+            background-color: rgba(0, 0, 0, 0.03);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+        }
+
+        /* جعل الإعلان ثابت في مكانه أثناء النزول للتصفح */
+        .sticky-ad-wrapper {
+            position: sticky;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* المحتوى الأوسط للتطبيق */
+        .main-app-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px;
         }
 
         .theme-switch {
@@ -123,7 +155,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
-            width: 90%;
+            width: 100%;
             max-width: 1100px;
             padding-bottom: 50px;
         }
@@ -229,114 +261,149 @@
         .chem-en { border-bottom: 6px solid #2ecc71; }
         .phys-en { border-bottom: 6px solid #3498db; }
 
+        /* التجاوب مع الهواتف الذكية: لإلغاء القفل الجانبي حتى لا يخرب شكل التطبيق في الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .h-layout-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-ad-zone {
+                display: none; /* إخفاء الأشرطة الجانبية في الموبايل أو يمكنك جعلها أسفل التطبيق */
+            }
+        }
+
     </style>
 </head>
 <body>
 
     <button class="theme-switch" onclick="toggleTheme()">تغيير الوضع 🌙</button>
 
-    <header>
-        <h1>⚡ القنابل النووية 💣</h1>
-        <span class="sub-title">للثانوية العامة</span>
+    <!-- بداية هيكل حرف الـ H للموقع -->
+    <div class="h-layout-container">
         
-        <!-- الأيقونات الصغيرة المضافة أسفل العنوان الرئيسي مباشرة -->
-        <div class="header-custom-btns">
-            <a href="#" class="ad-support-btn" onclick="runGlobalAdSystem(event)">⚠️ ادعمنا بمشاهدة اعلان</a>
-            <a href="https://t.me/Apps4Users" target="_blank" class="tg-custom-btn" onclick="executeTelegramVoice(event)">📢 قناة التليجرام</a>
-        </div>
-    </header>
+        <!-- العمود الجانبي الأيمن للإعلانات -->
+        <aside class="sidebar-ad-zone">
+            <div class="sticky-ad-wrapper">
+                <span style="font-size: 11px; color: #888; display:block; margin-bottom: 5px;">إعلان متاح</span>
+                <!-- كود الإعلان الخاص بك (الجهة اليمنى) -->
+                <div id="container-ecd37eb3b51978e4cf1c88fb23e69e0b-right"></div>
+                <script async src="https://www.highperformanceformat.com/ecd37eb3b51978e4cf1c88fb23e69e0b/invoke.js"></script>
+            </div>
+        </aside>
 
-    <div class="grid-container">
-        <!-- كارد اللغة العربية مضاف إليه زر مراجعة النحو شامل وزر النماذج الاسترشادية بالتناوب الإعلاني الاستبدالي -->
-        <div class="bomb-card arabic" onclick="triggerPromoVoice(); fetchData('arabic', 'https://raw.githubusercontent.com/username/repo/main/arabic.json')">
-            <i>📖</i>
-            <h2>قنابل العربية</h2>
-            
-            <!-- زر مراجعة النحو شامل موضوع فوق النماذج الاسترشادية مباشرة -->
-            <a href="#" class="models-btn" style="background-color: #2ecc71;" onclick="triggerPromoVoice(); processArabicRedirect('grammar', 'https://sanwia3ama-revisions-exams.github.io/-2026/', event)">مراجعة النحو شامل</a>
-            
-            <!-- زر النماذج الاسترشادية -->
-            <a href="#" class="models-btn" onclick="triggerPromoVoice(); processArabicRedirect('models', 'https://sanwia3ama-revisions-exams.github.io/arabic2026/', event)">اسئلة و اجابة النماذج الاسترشادية</a>
-        </div>
-        
-        <div class="bomb-card physics" onclick="triggerPromoVoice(); fetchData('physics', 'https://raw.githubusercontent.com/username/repo/main/physics.json')">
-            <i>⚡</i>
-            <h2>قنابل الفيزياء</h2>
-        </div>
+        <!-- القسم الأوسط الأساسي (التطبيق الخاص بك) -->
+        <main class="main-app-content">
+            <header>
+                <h1>⚡ القنابل النووية 💣</h1>
+                <span class="sub-title">للثانوية العامة</span>
+                
+                <!-- الأيقونات الصغيرة المضافة أسفل العنوان الرئيسي مباشرة -->
+                <div class="header-custom-btns">
+                    <a href="#" class="ad-support-btn" onclick="runGlobalAdSystem(event)">⚠️ ادعمنا بمشاهدة اعلان</a>
+                    <a href="https://t.me/Apps4Users" target="_blank" class="tg-custom-btn" onclick="executeTelegramVoice(event)">📢 قناة التليجرام</a>
+                </div>
+            </header>
 
-        <div class="bomb-card chemistry" onclick="triggerPromoVoice(); fetchData('chemistry', 'https://raw.githubusercontent.com/username/repo/main/chemistry.json')">
-            <i>🧪</i>
-            <h2>قنابل الكيمياء</h2>
-        </div>
+            <div class="grid-container">
+                <!-- كارد اللغة العربية -->
+                <div class="bomb-card arabic" onclick="triggerPromoVoice(); fetchData('arabic', 'https://raw.githubusercontent.com/username/repo/main/arabic.json')">
+                    <i>📖</i>
+                    <h2>قنابل العربية</h2>
+                    
+                    <a href="#" class="models-btn" style="background-color: #2ecc71;" onclick="triggerPromoVoice(); processArabicRedirect('grammar', 'https://sanwia3ama-revisions-exams.github.io/-2026/', event)">مراجعة النحو شامل</a>
+                    
+                    <a href="#" class="models-btn" onclick="triggerPromoVoice(); processArabicRedirect('models', 'https://sanwia3ama-revisions-exams.github.io/arabic2026/', event)">اسئلة و اجابة النماذج الاسترشادية</a>
+                </div>
+                
+                <div class="bomb-card physics" onclick="triggerPromoVoice(); fetchData('physics', 'https://raw.githubusercontent.com/username/repo/main/physics.json')">
+                    <i>⚡</i>
+                    <h2>قنابل الفيزياء</h2>
+                </div>
 
-        <div class="bomb-card math" onclick="triggerPromoVoice(); fetchData('math', 'https://raw.githubusercontent.com/username/repo/main/math.json')">
-            <i>📐</i>
-            <h2>قنابل الرياضيات</h2>
-        </div>
+                <div class="bomb-card chemistry" onclick="triggerPromoVoice(); fetchData('chemistry', 'https://raw.githubusercontent.com/username/repo/main/chemistry.json')">
+                    <i>🧪</i>
+                    <h2>قنابل الكيمياء</h2>
+                </div>
 
-        <div class="bomb-card history" onclick="triggerPromoVoice(); fetchData('history', 'https://raw.githubusercontent.com/username/repo/main/history.json')">
-            <i>🏛️</i>
-            <h2>قنابل التاريخ</h2>
-        </div>
+                <div class="bomb-card math" onclick="triggerPromoVoice(); fetchData('math', 'https://raw.githubusercontent.com/username/repo/main/math.json')">
+                    <i>📐</i>
+                    <h2>قنابل الرياضيات</h2>
+                </div>
 
-        <div class="bomb-card geography" onclick="triggerPromoVoice(); fetchData('geography', 'https://raw.githubusercontent.com/username/repo/main/geography.json')">
-            <i>🌍</i>
-            <h2>قنابل الجغرافيا</h2>
-        </div>
+                <div class="bomb-card history" onclick="triggerPromoVoice(); fetchData('history', 'https://raw.githubusercontent.com/username/repo/main/history.json')">
+                    <i>🏛️</i>
+                    <h2>قنابل التاريخ</h2>
+                </div>
 
-        <!-- المواد المضافة الجديدة -->
-        <div class="bomb-card english" onclick="triggerPromoVoice(); fetchData('english', 'https://raw.githubusercontent.com/username/repo/main/english.json')">
-            <i>🔤</i>
-            <h2>قنابل الانجليزية</h2>
-        </div>
+                <div class="bomb-card geography" onclick="triggerPromoVoice(); fetchData('geography', 'https://raw.githubusercontent.com/username/repo/main/geography.json')">
+                    <i>🌍</i>
+                    <h2>قنابل الجغرافيا</h2>
+                </div>
 
-        <div class="bomb-card islamic" onclick="triggerPromoVoice(); fetchData('islamic', 'https://raw.githubusercontent.com/username/repo/main/islamic.json')">
-            <i>🕌</i>
-            <h2>قنابل التربية الاسلامية</h2>
-        </div>
+                <div class="bomb-card english" onclick="triggerPromoVoice(); fetchData('english', 'https://raw.githubusercontent.com/username/repo/main/english.json')">
+                    <i>🔤</i>
+                    <h2>قنابل الانجليزية</h2>
+                </div>
 
-        <div class="bomb-card national" onclick="triggerPromoVoice(); fetchData('national', 'https://raw.githubusercontent.com/username/repo/main/national.json')">
-            <i>🦅</i>
-            <h2>قنابل التربية الوطنية</h2>
-        </div>
+                <div class="bomb-card islamic" onclick="triggerPromoVoice(); fetchData('islamic', 'https://raw.githubusercontent.com/username/repo/main/islamic.json')">
+                    <i>🕌</i>
+                    <h2>قنابل التربية الاسلامية</h2>
+                </div>
 
-        <div class="bomb-card stats" onclick="triggerPromoVoice(); fetchData('stats', 'https://raw.githubusercontent.com/username/repo/main/stats.json')">
-            <i>📊</i>
-            <h2>قنابل الاحصاء</h2>
-        </div>
+                <div class="bomb-card national" onclick="triggerPromoVoice(); fetchData('national', 'https://raw.githubusercontent.com/username/repo/main/national.json')">
+                    <i>🦅</i>
+                    <h2>قنابل التربية الوطنية</h2>
+                </div>
 
-        <div class="bomb-card french" onclick="triggerPromoVoice(); fetchData('french', 'https://raw.githubusercontent.com/username/repo/main/french.json')">
-            <i>🥖</i>
-            <h2>قنابل الفرنساوي</h2>
-        </div>
+                <div class="bomb-card stats" onclick="triggerPromoVoice(); fetchData('stats', 'https://raw.githubusercontent.com/username/repo/main/stats.json')">
+                    <i>📊</i>
+                    <h2>قنابل الاحصاء</h2>
+                </div>
 
-        <div class="bomb-card biology" onclick="triggerPromoVoice(); fetchData('biology', 'https://raw.githubusercontent.com/username/repo/main/biology.json')">
-            <i>🧬</i>
-            <h2>قنابل الاحياء</h2>
-        </div>
+                <div class="bomb-card french" onclick="triggerPromoVoice(); fetchData('french', 'https://raw.githubusercontent.com/username/repo/main/french.json')">
+                    <i>🥖</i>
+                    <h2>قنابل الفرنساوي</h2>
+                </div>
 
-        <div class="bomb-card bio-en" onclick="triggerPromoVoice(); fetchData('biology_en', 'https://raw.githubusercontent.com/username/repo/main/biology_en.json')">
-            <i>🌿</i>
-            <h2>Biology Bomb</h2>
-        </div>
+                <div class="bomb-card biology" onclick="triggerPromoVoice(); fetchData('biology', 'https://raw.githubusercontent.com/username/repo/main/biology.json')">
+                    <i>🧬</i>
+                    <h2>قنابل الاحياء</h2>
+                </div>
 
-        <div class="bomb-card chem-en" onclick="triggerPromoVoice(); fetchData('chemistry_en', 'https://raw.githubusercontent.com/username/repo/main/chemistry_en.json')">
-            <i>⚗️</i>
-            <h2>Chemistry Bomb</h2>
-        </div>
+                <div class="bomb-card bio-en" onclick="triggerPromoVoice(); fetchData('biology_en', 'https://raw.githubusercontent.com/username/repo/main/biology_en.json')">
+                    <i>🌿</i>
+                    <h2>Biology Bomb</h2>
+                </div>
 
-        <div class="bomb-card phys-en" onclick="triggerPromoVoice(); fetchData('physics_en', 'https://raw.githubusercontent.com/username/repo/main/physics_en.json')">
-            <i>⚛️</i>
-            <h2>Physics Bomb</h2>
-        </div>
+                <div class="bomb-card chem-en" onclick="triggerPromoVoice(); fetchData('chemistry_en', 'https://raw.githubusercontent.com/username/repo/main/chemistry_en.json')">
+                    <i>⚗️</i>
+                    <h2>Chemistry Bomb</h2>
+                </div>
+
+                <div class="bomb-card phys-en" onclick="triggerPromoVoice(); fetchData('physics_en', 'https://raw.githubusercontent.com/username/repo/main/physics_en.json')">
+                    <i>⚛️</i>
+                    <h2>Physics Bomb</h2>
+                </div>
+            </div>
+        </main>
+
+        <!-- العمود الجانبي الأيسر للإعلانات -->
+        <aside class="sidebar-ad-zone">
+            <div class="sticky-ad-wrapper">
+                <span style="font-size: 11px; color: #888; display:block; margin-bottom: 5px;">إعلان متاح</span>
+                <!-- كود الإعلان الخاص بك (الجهة اليسرى) -->
+                <div id="container-ecd37eb3b51978e4cf1c88fb23e69e0b-left"></div>
+                <script async src="https://www.highperformanceformat.com/ecd37eb3b51978e4cf1c88fb23e69e0b/invoke.js"></script>
+            </div>
+        </aside>
+
     </div>
+    <!-- نهاية هيكل حرف الـ H -->
 
     <script>
-        // المتغيرات التشغيلية للمنظومة الذكية
         let globalFeaturesUnlocked = false;
         let countdownTimerReference = null;
-        let isFirstUsage = true; // تتبع أول استخدام للتطبيق لمنح الضغطة المجانية الأولى
-        let adWatchingInProgress = false; // يمنع تخطي الإعلان قبل انتهاء المدة
+        let isFirstUsage = true; 
+        let adWatchingInProgress = false; 
         const officialAdLink = "https://linkjust.com/Braile26";
 
         function triggerPromoVoice() {
@@ -363,7 +430,6 @@
             }
         }
 
-        // دالة تشغيل النطق الصوتي الفوري والتوجيه الخارجي الآمن لقناة التليجرام
         function executeTelegramVoice(event) {
             event.stopPropagation();
             if ('speechSynthesis' in window) {
@@ -375,7 +441,6 @@
             }
         }
 
-        // دالة تفعيل الإعلان الإجباري والعداد العشوائي عند الضغط على زر "ادعمنا بمشاهدة اعلان"
         function runGlobalAdSystem(event) {
             event.preventDefault();
             if (globalFeaturesUnlocked) {
@@ -384,7 +449,6 @@
             }
 
             adWatchingInProgress = true;
-            // احتساب مدة عشوائية تتغير في كل مرة من 35 إلى 60 ثانية
             const randomizedTime = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
             let counterTime = randomizedTime;
 
@@ -404,31 +468,26 @@
             }, 1000);
         }
 
-        // دالة معالجة روابط كارت العربي بالتناوب والتحقق الشامل من وقت الإعلان
         function processArabicRedirect(currentTab, targetContentUrl, event) {
             event.preventDefault();
             event.stopPropagation();
 
-            // 1. إذا كانت هذه هي أول مرة يضغط فيها المستخدم على النحو أو النماذج (تفتح مباشرة بدون إعلان)
             if (isFirstUsage) {
-                isFirstUsage = false; // استهلاك المرة الأولى المجانية
+                isFirstUsage = false; 
                 window.open(targetContentUrl, '_blank');
                 return;
             }
 
-            // 2. إذا تم فك القفل الشامل مسبقاً عن طريق إكمال الإعلان بالكامل
             if (globalFeaturesUnlocked) {
                 window.open(targetContentUrl, '_blank');
                 return;
             }
 
-            // 3. إذا كان هناك إعلان جاري تشغيله حالياً ولم تنتهِ مدته (نظام حماية القفل التلقائي)
             if (adWatchingInProgress) {
                 alert("اضغطت لمشاهدة الاعلان لانه دعم لنا حتي تفتح الميزات");
                 return;
             }
 
-            // 4. تفعيل الإعلان الإجباري بالتبادل للمرات التالية بمدد عشوائية متغيرة من 35 إلى 60 ثانية
             adWatchingInProgress = true;
             const randomizedTime = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
             let counterTime = randomizedTime;
@@ -449,11 +508,9 @@
             }, 1000);
         }
 
-        // دالة جلب البيانات من JSON عبر GitHub مع نظام الحماية الصارم
         async function fetchData(subjectName, url) {
             console.log("جاري الاتصال بقاعدة بيانات: " + subjectName);
             
-            // التحقق من فك القفل لمشاهدة الإعلانات
             if (!globalFeaturesUnlocked) {
                 alert("مشاهدة الاعلان هي داعم لنا لكي نستمر! يرجى الضغط على أيقونة 'ادعمنا بمشاهدة اعلان' الصغيرة الموجودة أعلى الصفحة أولاً لتتمكن من تصفح قنابل المواد.");
                 return;
