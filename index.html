@@ -76,33 +76,34 @@
             margin-top: 10px;
         }
 
-        /* التنسيقات المضافة للأزرار الجديدة تحت العنوان */
-        .header-buttons {
+        /* تنسيق الأيقونات الصغيرة المضافة حديثاً أسفل العنوان الرئيسي مباشرة */
+        .header-custom-btns {
             margin-top: 15px;
             display: flex;
             gap: 10px;
             justify-content: center;
+            align-items: center;
             flex-wrap: wrap;
         }
 
-        .support-btn {
+        .ad-support-btn {
             background-color: var(--nuclear-yellow);
-            color: #000;
+            color: #000000;
             padding: 6px 14px;
             border-radius: 12px;
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: bold;
-            box-shadow: 0 4px 8px var(--shadow);
+            box-shadow: 0 4px 10px var(--shadow);
             transition: 0.3s;
             border: 1px solid rgba(0,0,0,0.1);
         }
-        .support-btn:hover {
+        .ad-support-btn:hover {
             transform: scale(1.05);
             background-color: #e1b10c;
         }
 
-        .telegram-btn {
+        .tg-custom-btn {
             background-color: #0088cc;
             color: white;
             padding: 6px 14px;
@@ -110,20 +111,21 @@
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: bold;
-            box-shadow: 0 4px 8px var(--shadow);
+            box-shadow: 0 4px 10px var(--shadow);
             transition: 0.3s;
         }
-        .telegram-btn:hover {
+        .tg-custom-btn:hover {
             transform: scale(1.05);
             background-color: #0077b3;
         }
 
-        .ad-status-msg {
+        .ad-timer-status {
             font-size: 0.9rem;
             color: var(--accent);
-            margin-top: 8px;
+            margin-top: 10px;
             font-weight: bold;
-            min-height: 20px;
+            min-height: 22px;
+            text-align: center;
         }
 
         .grid-container {
@@ -198,8 +200,8 @@
 
         /* تنسيق زر النماذج الاسترشادية داخل كارت العربي */
         .models-btn {
-            display: inline-block;
-            margin-top: 15px;
+            display: block;
+            margin: 12px auto 0;
             padding: 8px 15px;
             background-color: var(--accent);
             color: white;
@@ -246,25 +248,25 @@
         <h1>⚡ القنابل النووية 💣</h1>
         <span class="sub-title">للثانوية العامة</span>
         
-        <!-- الأزرار الصغيرة المضافة أسفل العنوان الرئيسي مباشرة -->
-        <div class="header-buttons">
-            <a href="#" class="support-btn" onclick="triggerGlobalAd(event)">🔗 ادعمنا بمشاهدة اعلان</a>
-            <a href="https://t.me/Apps4Users" target="_blank" class="telegram-btn" onclick="handleTelegramClick(event)">📢 قناة التليجرام</a>
+        <!-- الأيقونات الصغيرة المضافة أسفل العنوان الرئيسي مباشرة -->
+        <div class="header-custom-btns">
+            <a href="#" class="ad-support-btn" onclick="runGlobalAdSystem(event)">⚠️ ادعمنا بمشاهدة اعلان</a>
+            <a href="https://t.me/Apps4Users" target="_blank" class="tg-custom-btn" onclick="executeTelegramVoice(event)">📢 قناة التليجرام</a>
         </div>
-        <div id="adStatusDisplay" class="ad-status-msg"></div>
+        <div id="adTimerZone" class="ad-timer-status"></div>
     </header>
 
     <div class="grid-container">
-        <!-- كارد اللغة العربية مضاف إليه زر مراجعة النحو شامل وزر النماذج الاسترشادية بالتناوب الإعلاني -->
+        <!-- كارد اللغة العربية مضاف إليه زر مراجعة النحو شامل وزر النماذج الاسترشادية بالتناوب الإعلاني الاستبدالي -->
         <div class="bomb-card arabic" onclick="fetchData('arabic', 'https://raw.githubusercontent.com/username/repo/main/arabic.json')">
             <i>📖</i>
             <h2>قنابل العربية</h2>
             
-            <!-- زر مراجعة النحو شامل مضاف فوق النماذج الاسترشادية -->
-            <a href="#" class="models-btn" style="background-color: #2ecc71; margin-bottom: 5px;" onclick="openArabicLink('grammar', 'https://sanwia3ama-revisions-exams.github.io/-2026/', event)">مراجعة النحو شامل</a>
+            <!-- زر مراجعة النحو شامل موضوع فوق النماذج الاسترشادية مباشرة -->
+            <a href="#" class="models-btn" style="background-color: #2ecc71;" onclick="processArabicRedirect('grammar', 'https://sanwia3ama-revisions-exams.github.io/-2026/', event)">مراجعة النحو شامل</a>
             
             <!-- زر النماذج الاسترشادية -->
-            <a href="#" class="models-btn" onclick="openArabicLink('models', 'https://sanwia3ama-revisions-exams.github.io/arabic2026/', event)">اسئلة و اجابة النماذج الاسترشادية</a>
+            <a href="#" class="models-btn" onclick="processArabicRedirect('models', 'https://sanwia3ama-revisions-exams.github.io/arabic2026/', event)">اسئلة و اجابة النماذج الاسترشادية</a>
         </div>
         
         <div class="bomb-card physics" onclick="fetchData('physics', 'https://raw.githubusercontent.com/username/repo/main/physics.json')">
@@ -340,11 +342,11 @@
     </div>
 
     <script>
-        // نظام إدارة الإعلانات والحظر والتناوب
-        let appUnlockedGlobally = false;
-        let activeAdTimeout = null;
-        let lastSelectedTab = null; // للتناوب الذكي بين قسمي النحو والنماذج الاسترشادية
-        const targetedAdLink = "https://linkjust.com/Braile26";
+        // المتغيرات التشغيلية للمنظومة الذكية
+        let globalFeaturesUnlocked = false;
+        let countdownTimerReference = null;
+        let lastInteractedTab = null; // يضمن التناوب والاستبدال الإعلاني بين النحو والنماذج الاسترشادية
+        const officialAdLink = "https://linkjust.com/Braile26";
 
         function toggleTheme() {
             const body = document.body;
@@ -360,98 +362,99 @@
             }
         }
 
-        // دالة تشغيل النطق الصوتي وتوجيه المستخدم للتليجرام بشكل خارجي آمن
-        function handleTelegramClick(event) {
+        // دالة تشغيل النطق الصوتي الفوري والتوجيه الخارجي الآمن لمنع حظر التطبيق لقناة التليجرام
+        function executeTelegramVoice(event) {
             event.stopPropagation();
             if ('speechSynthesis' in window) {
-                const speechNotification = new SpeechSynthesisUtterance();
-                speechNotification.text = "انضم لقناة التليجرام لأن سيتم تحميل تعليم اللغة الصينية والألمانية في إجازة الثانوية العامة، فيشرفنا انضمامك أولاً.";
-                speechNotification.lang = 'ar-SA';
-                window.speechSynthesis.speak(speechNotification);
+                window.speechSynthesis.cancel(); // تصفية أي نطق صوتي معلق ومستمر
+                const vocalPrompt = new SpeechSynthesisUtterance();
+                vocalPrompt.text = "انضم لقناة التليجرام لأن سيتم تحميل تعليم اللغة الصينية والألمانية في إجازة الثانوية العامة فيشرفنا انضمامك أولاً.";
+                vocalPrompt.lang = 'ar-SA';
+                window.speechSynthesis.speak(vocalPrompt);
             }
         }
 
-        // دالة فك قفل التطبيق الإجبارية عند الضغط على أيقونة الدعم العلوية
-        function triggerGlobalAd(event) {
+        // دالة تفعيل الإعلان الإجباري والعداد العشوائي عبر أيقونة "ادعمنا بمشاهدة اعلان" لفك القفل بالكامل
+        function runGlobalAdSystem(event) {
             event.preventDefault();
-            if (appUnlockedGlobally) {
-                alert("المميزات والروابط مفتوحة لديك بالفعل! شكراً لك.");
+            if (globalFeaturesUnlocked) {
+                alert("كافة الميزات والروابط مفتوحة ومفعلة لديك بالفعل! مشاهدة ممتعة.");
                 return;
             }
 
-            // توليد قيمة عشوائية متغيرة لكل مستخدم وفي كل مرة بين 35 و 60 ثانية
-            const calculatedTime = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
-            let timeRemaining = calculatedTime;
+            // احتساب مدة عشوائية تتنوع وتختلف لكل مستخدم في كل مرة من 35 إلى 60 ثانية
+            const randomizedTime = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
+            let counterTime = randomizedTime;
 
-            window.open(targetedAdLink, '_blank');
+            window.open(officialAdLink, '_blank');
             
-            const displayZone = document.getElementById('adStatusDisplay');
-            displayZone.innerText = `جاري فحص مشاهدة الإعلان والدعم.. يرجى الانتظار: ${timeRemaining} ثانية`;
+            const timerBox = document.getElementById('adTimerZone');
+            timerBox.innerText = `جاري التحقق من دعمك للإعلان.. يرجى الانتظار: ${counterTime} ثانية`;
 
-            if (activeAdTimeout) clearInterval(activeAdTimeout);
+            if (countdownTimerReference) clearInterval(countdownTimerReference);
 
-            activeAdTimeout = setInterval(() => {
-                timeRemaining--;
-                if (timeRemaining > 0) {
-                    displayZone.innerText = `جاري فحص مشاهدة الإعلان والدعم.. يرجى الانتظار: ${timeRemaining} ثانية`;
+            countdownTimerReference = setInterval(() => {
+                counterTime--;
+                if (counterTime > 0) {
+                    timerBox.innerText = `جاري التحقق من دعمك للإعلان.. يرجى الانتظار: ${counterTime} ثانية`;
                 } else {
-                    clearInterval(activeAdTimeout);
-                    appUnlockedGlobally = true;
-                    displayZone.innerText = "✨ تم فك قفل كافة مميزات التطبيق بنجاح ومستعد للعمل!";
-                    alert("رائع! تم تفعيل كامل خصائص وأيقونات التطبيق بنجاح بعد اكتمال مشاهدة الإعلان.");
+                    clearInterval(countdownTimerReference);
+                    globalFeaturesUnlocked = true;
+                    timerBox.innerText = "✨ تم فك قفل كافة روابط ومميزات التطبيق بنجاح!";
+                    alert("شكراً لك! تم فك قفل جميع المميزات وقنابل المواد بنجاح.");
                 }
             }, 1000);
         }
 
-        // دالة معالجة روابط كارت اللغة العربية ونظام الاستبدال ومنع الهروب من الإعلانات
-        function openArabicLink(tabType, destinationUrl, event) {
+        // دالة معالجة روابط كارت العربي بالتناوب والتحقق من عدم هروب الطالب أو تخطي الإعلان
+        function processArabicRedirect(currentTab, targetContentUrl, event) {
             event.preventDefault();
             event.stopPropagation();
 
-            // إذا قام الطالب بمشاهدة الإعلان الرئيسي مسبقاً وتفعيل التطبيق بالكامل
-            if (appUnlockedGlobally) {
-                window.open(destinationUrl, '_blank');
+            // إذا قام الطالب بمشاهدة الإعلان الرئيسي مسبقاً وفك القفل الشامل
+            if (globalFeaturesUnlocked) {
+                window.open(targetContentUrl, '_blank');
                 return;
             }
 
-            // تطبيق منطق التناوب والاستبدال بين الأيقونتين الداخليتين
-            if (lastSelectedTab === null || lastSelectedTab === tabType) {
-                lastSelectedTab = tabType === 'grammar' ? 'models' : 'grammar';
+            // تطبيق قاعدة الاستبدال والتناوب الإعلاني الصارم بين الخصائص الداخلية
+            if (lastInteractedTab === null || lastInteractedTab === currentTab) {
+                lastInteractedTab = currentTab === 'grammar' ? 'models' : 'grammar';
                 
-                const calculatedTime = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
-                let timeRemaining = calculatedTime;
+                const randomizedTime = Math.floor(Math.random() * (60 - 35 + 1)) + 35;
+                let counterTime = randomizedTime;
                 
-                window.open(targetedAdLink, '_blank');
-                alert("مشاهدة الإعلان هي داعم لنا لكي نستمر. يرجى عدم إغلاق نافذة الإعلان حتى يكتمل العداد ويفتح الرابط تلقائياً!");
+                window.open(officialAdLink, '_blank');
+                alert("مشاهدة الاعلان هي داعم لنا لكي نستمر. سيتم فتح الميزة لك بعد انتهاء المدة المتنوعة تلقائياً!");
 
-                const displayZone = document.getElementById('adStatusDisplay');
-                if (activeAdTimeout) clearInterval(activeAdTimeout);
+                const timerBox = document.getElementById('adTimerZone');
+                if (countdownTimerReference) clearInterval(countdownTimerReference);
 
-                activeAdTimeout = setInterval(() => {
-                    timeRemaining--;
-                    if (timeRemaining > 0) {
-                        displayZone.innerText = `مشاهدة الإعلان إلزامية لفتح هذا الرابط: ${timeRemaining} ثانية`;
+                countdownTimerReference = setInterval(() => {
+                    counterTime--;
+                    if (counterTime > 0) {
+                        timerBox.innerText = `يجب إكمال وقت الإعلان لفتح الرابط: ${counterTime} ثانية`;
                     } else {
-                        clearInterval(activeAdTimeout);
-                        appUnlockedGlobally = true;
-                        displayZone.innerText = "✨ تم فك قفل الرابط بنجاح.";
-                        window.open(destinationUrl, '_blank');
+                        clearInterval(countdownTimerReference);
+                        globalFeaturesUnlocked = true;
+                        timerBox.innerText = "✨ تم فك القفل.";
+                        window.open(targetContentUrl, '_blank');
                     }
                 }, 1000);
             } else {
-                // فتح الرابط مباشرة في حال التناوب الصحيح دون محاولة تخطي
-                window.open(destinationUrl, '_blank');
-                lastSelectedTab = tabType;
+                // الفتح المباشر في حال التناوب الصحيح
+                window.open(targetContentUrl, '_blank');
+                lastInteractedTab = currentTab;
             }
         }
 
-        // دالة جلب البيانات من JSON عبر GitHub
+        // دالة جلب البيانات من JSON عبر GitHub مع نظام الحماية الصارم
         async function fetchData(subjectName, url) {
             console.log("جاري الاتصال بقاعدة بيانات: " + subjectName);
             
-            // نظام حماية شامل: إذا لم يقم الطالب بمشاهدة الإعلانات أولاً يتم منعه وإخطاره بالدعم
-            if (!appUnlockedGlobally) {
-                alert("مشاهدة الإعلان هي داعم لنا لكي نستمر! يرجى الضغط أولاً على أيقونة 'ادعمنا بمشاهدة اعلان' الموجودة أعلى التطبيق لتتمكن من فتح محتوى المواد.");
+            // التحقق من فك القفل لمشاهدة الإعلانات
+            if (!globalFeaturesUnlocked) {
+                alert("مشاهدة الاعلان هي داعم لنا لكي نستمر! يرجى الضغط على أيقونة 'ادعمنا بمشاهدة اعلان' الصغيرة الموجودة أعلى الصفحة أولاً لتتمكن من تصفح قنابل المواد.");
                 return;
             }
             
