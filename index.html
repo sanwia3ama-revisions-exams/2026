@@ -146,6 +146,26 @@
             font-weight: bold;
         }
 
+        /* تنسيق زر النماذج الاسترشادية داخل كارت العربي */
+        .models-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 15px;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: 0.3s;
+            position: relative;
+            z-index: 10; /* لضمان قابليته للنقر فوق الكارد */
+        }
+        .models-btn:hover {
+            background-color: #e04400;
+            transform: scale(1.05);
+        }
+
         /* ألوان المواد */
         .arabic { border-bottom: 6px solid #ff9f43; }
         .physics { border-bottom: 6px solid #3498db; }
@@ -153,6 +173,17 @@
         .math { border-bottom: 6px solid #ee5253; }
         .history { border-bottom: 6px solid #f1c40f; }
         .geography { border-bottom: 6px solid #00d2d3; }
+        
+        /* ألوان المواد الجديدة */
+        .english { border-bottom: 6px solid #9b59b6; }
+        .islamic { border-bottom: 6px solid #27ae60; }
+        .national { border-bottom: 6px solid #7f8c8d; }
+        .stats { border-bottom: 6px solid #e67e22; }
+        .french { border-bottom: 6px solid #16a085; }
+        .biology { border-bottom: 6px solid #27ae60; }
+        .bio-en { border-bottom: 6px solid #1abc9c; }
+        .chem-en { border-bottom: 6px solid #2ecc71; }
+        .phys-en { border-bottom: 6px solid #3498db; }
 
     </style>
 </head>
@@ -166,9 +197,11 @@
     </header>
 
     <div class="grid-container">
+        <!-- كارد اللغة العربية مضاف إليه زر النماذج الاسترشادية -->
         <div class="bomb-card arabic" onclick="fetchData('arabic', 'https://raw.githubusercontent.com/username/repo/main/arabic.json')">
             <i>📖</i>
             <h2>قنابل العربية</h2>
+            <a href="https://sanwia3ama-revisions-exams.github.io/arabic2026/" target="_blank" class="models-btn" onclick="event.stopPropagation();">اسئلة و اجابة النماذج الاسترشادية</a>
         </div>
         
         <div class="bomb-card physics" onclick="fetchData('physics', 'https://raw.githubusercontent.com/username/repo/main/physics.json')">
@@ -194,6 +227,52 @@
         <div class="bomb-card geography" onclick="fetchData('geography', 'https://raw.githubusercontent.com/username/repo/main/geography.json')">
             <i>🌍</i>
             <h2>قنابل الجغرافيا</h2>
+        </div>
+
+        <!-- المواد المضافة الجديدة -->
+        <div class="bomb-card english" onclick="fetchData('english', 'https://raw.githubusercontent.com/username/repo/main/english.json')">
+            <i>🔤</i>
+            <h2>قنابل الانجليزية</h2>
+        </div>
+
+        <div class="bomb-card islamic" onclick="fetchData('islamic', 'https://raw.githubusercontent.com/username/repo/main/islamic.json')">
+            <i>🕌</i>
+            <h2>قنابل التربية الاسلامية</h2>
+        </div>
+
+        <div class="bomb-card national" onclick="fetchData('national', 'https://raw.githubusercontent.com/username/repo/main/national.json')">
+            <i>🦅</i>
+            <h2>قنابل التربية الوطنية</h2>
+        </div>
+
+        <div class="bomb-card stats" onclick="fetchData('stats', 'https://raw.githubusercontent.com/username/repo/main/stats.json')">
+            <i>📊</i>
+            <h2>قنابل الاحصاء</h2>
+        </div>
+
+        <div class="bomb-card french" onclick="fetchData('french', 'https://raw.githubusercontent.com/username/repo/main/french.json')">
+            <i>🥖</i>
+            <h2>قنابل الفرنساوي</h2>
+        </div>
+
+        <div class="bomb-card biology" onclick="fetchData('biology', 'https://raw.githubusercontent.com/username/repo/main/biology.json')">
+            <i>🧬</i>
+            <h2>قنابل الاحياء</h2>
+        </div>
+
+        <div class="bomb-card bio-en" onclick="fetchData('biology_en', 'https://raw.githubusercontent.com/username/repo/main/biology_en.json')">
+            <i>🌿</i>
+            <h2>Biology Bomb</h2>
+        </div>
+
+        <div class="bomb-card chem-en" onclick="fetchData('chemistry_en', 'https://raw.githubusercontent.com/username/repo/main/chemistry_en.json')">
+            <i>⚗️</i>
+            <h2>Chemistry Bomb</h2>
+        </div>
+
+        <div class="bomb-card phys-en" onclick="fetchData('physics_en', 'https://raw.githubusercontent.com/username/repo/main/physics_en.json')">
+            <i>⚛️</i>
+            <h2>Physics Bomb</h2>
         </div>
     </div>
 
